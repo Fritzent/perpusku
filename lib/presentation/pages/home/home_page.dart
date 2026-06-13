@@ -115,11 +115,14 @@ class _HomeViewState extends State<_HomeView> {
                 buildWhen: (prev, curr) =>
                     prev.pendingCount != curr.pendingCount ||
                     prev.isSyncing != curr.isSyncing,
-                builder: (ctx, state) => SyncBanner(
-                  pendingCount: state.pendingCount,
-                  isSyncing: state.isSyncing,
-                  onSync: () =>
-                      ctx.read<BookBloc>().add(const SyncPendingBooksEvent()),
+                builder: (ctx, state) => Visibility(
+                  visible: state.pendingCount > 0,
+                  child: SyncBanner(
+                    pendingCount: state.pendingCount,
+                    isSyncing: state.isSyncing,
+                    onSync: () =>
+                        ctx.read<BookBloc>().add(const SyncPendingBooksEvent()),
+                  ),
                 ),
               ),
               _FilterRow(l10n: l10n),
