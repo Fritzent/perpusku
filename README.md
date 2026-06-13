@@ -1,3 +1,3 @@
 # perpusku
 
-app for asse
+app for assesment flutter mobile developer
