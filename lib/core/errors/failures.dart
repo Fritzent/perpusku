@@ -75,3 +75,9 @@ class NotFoundException implements Exception {
   final String message;
   const NotFoundException([this.message = 'Not found']);
 }
+
+class InvalidCredentialsFailure extends Failure {
+  const InvalidCredentialsFailure([
+    super.message = 'Email or password is incorrect',
+  ]);
+}

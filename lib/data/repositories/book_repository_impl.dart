@@ -15,12 +15,10 @@ class BookRepositoryImpl implements BookRepository {
   final Logger _logger;
 
   BookRepositoryImpl({
-    required BookQuery bookQuery,
-    required BookStorageQuery storageQuery,
-    required Logger logger,
-  })  : _bookQuery = bookQuery,
-        _storageQuery = storageQuery,
-        _logger = logger;
+    required this._bookQuery,
+    required this._storageQuery,
+    required this._logger,
+  });
 
   @override
   Future<Either<Failure, PaginatedBooks>> getBooks(BookFilter filter) async {

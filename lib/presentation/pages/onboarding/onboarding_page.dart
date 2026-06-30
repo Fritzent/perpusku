@@ -41,7 +41,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
   Future<void> _finish() async {
     await completeOnboarding();
     if (!mounted) return;
-    context.go(AppRoutes.home);
+    context.go(AppRoutes.login);
   }
 
   @override

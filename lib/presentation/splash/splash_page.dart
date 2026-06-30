@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:perpusku/core/constant/app_constant.dart';
+import 'package:perpusku/core/domain/usecases/check_login_status_usecase.dart';
 import 'package:perpusku/core/router/app_router.dart';
 import 'package:perpusku/core/theme/app_text_styles.dart';
+import 'package:perpusku/data/datasources/remote/auth/auth_local_datasource.dart';
+import 'package:perpusku/data/datasources/remote/auth/auth_remote_datasource.dart';
+import 'package:perpusku/data/repositories/auth_repository_impl.dart';
 import 'package:perpusku/l10n/app_localizations.dart';
 
 class SplashPage extends StatefulWidget {
@@ -47,11 +51,29 @@ class _SplashPageState extends State<SplashPage>
   }
 
   Future<void> _navigate() async {
-    await Future.delayed(AppConstants.splashDuration + const Duration(milliseconds: 200));
+    await Future.delayed(
+      AppConstants.splashDuration + const Duration(milliseconds: 200),
+    );
     if (!mounted) return;
-    final done = await isOnboardingComplete();
+
+    final onboardingDone = await isOnboardingComplete();
     if (!mounted) return;
-    context.go(done ? AppRoutes.home : AppRoutes.onboarding);
+
+    if (!onboardingDone) {
+      context.go(AppRoutes.onboarding);
+      return;
+    }
+
+    final checkLoginStatus = CheckLoginStatusUseCase(
+      AuthRepositoryImpl(
+        remoteDataSource: AuthRemoteDataSourceImpl(),
+        localDataSource: AuthLocalDataSourceImpl(),
+      ),
+    );
+    final isLoggedIn = await checkLoginStatus();
+    if (!mounted) return;
+
+    context.go(isLoggedIn ? AppRoutes.home : AppRoutes.login);
   }
 
   @override
